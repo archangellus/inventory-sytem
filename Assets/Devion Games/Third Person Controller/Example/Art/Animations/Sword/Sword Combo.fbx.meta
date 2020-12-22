@@ -60,27 +60,27 @@ ModelImporter:
       curves: []
       events:
       - time: 0.21739131
-        functionName: PlayAudio
-        data: SFX
+        functionName: PlaySound
+        data: 
         objectReferenceParameter: {fileID: 8300000, guid: a52f993decd63c347ae44221cec238a6,
           type: 3}
-        floatParameter: 1
+        floatParameter: 0.4
         intParameter: 0
         messageOptions: 0
       - time: 0.41304347
-        functionName: PlayAudio
-        data: SFX
+        functionName: PlaySound
+        data: 
         objectReferenceParameter: {fileID: 8300000, guid: a52f993decd63c347ae44221cec238a6,
           type: 3}
-        floatParameter: 1
+        floatParameter: 0.4
         intParameter: 0
         messageOptions: 0
       - time: 0.65217394
-        functionName: PlayAudio
-        data: SFX
+        functionName: PlaySound
+        data: 
         objectReferenceParameter: {fileID: 8300000, guid: a52f993decd63c347ae44221cec238a6,
           type: 3}
-        floatParameter: 1
+        floatParameter: 0.4
         intParameter: 0
         messageOptions: 0
       - time: 0.23157896

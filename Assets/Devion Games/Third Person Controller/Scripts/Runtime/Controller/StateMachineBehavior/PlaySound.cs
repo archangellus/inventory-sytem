@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class PlaySound : StateMachineBehaviour
 {
@@ -8,7 +7,6 @@ public class PlaySound : StateMachineBehaviour
     public Condition condition;
 
     public AudioClip sound;
-    public AudioMixerGroup audioMixerGroup;
     [Range(0f,1f)]
     public float volume = 1f;
     [Range(0f,1f)]
@@ -25,7 +23,6 @@ public class PlaySound : StateMachineBehaviour
             if (this.audioSource == null)
             {
                 this.audioSource = animator.gameObject.AddComponent<AudioSource>();
-                this.audioSource.outputAudioMixerGroup = audioMixerGroup;
             }
 
         }
@@ -60,14 +57,14 @@ public class PlaySound : StateMachineBehaviour
 
     private void Play(AudioClip clip, float volume)
     {
-        if (clip == null){
+        if (clip == null)
+        {
             return;
         }
 
         if (audioSource != null)
         {
-            audioSource.volume = volume;
-            audioSource.PlayOneShot(clip);
+            audioSource.PlayOneShot(clip, volume);
         }
     }
 

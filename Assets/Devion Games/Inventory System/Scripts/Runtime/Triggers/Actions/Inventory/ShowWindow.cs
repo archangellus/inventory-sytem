@@ -65,7 +65,6 @@ namespace DevionGames.InventorySystem
                 }else{
                     this.m_ItemContainer.Collection = this.m_ItemCollection;
                     this.m_ItemContainer.Show();
-                
                 }
                 this.m_WindowStatus = ActionStatus.Running;
             }

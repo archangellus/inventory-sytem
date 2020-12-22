@@ -16,12 +16,10 @@ namespace DevionGames{
         private static Dictionary<Type, CustomDrawer> m_Drawers;
         private static Dictionary<Type, EditorTools.DrawerKeySet> m_DrawerTypeForType;
         private static Dictionary<Type, MonoScript> m_TypeMonoScriptLookup;
-        private static Dictionary<Type, bool> m_CustomPropertyDrawerLookup;
 
         static EditorTools() {
             EditorTools.m_TypeMonoScriptLookup = new Dictionary<Type, MonoScript>();
             EditorTools.m_Drawers = new Dictionary<Type, CustomDrawer>();
-            EditorTools.m_CustomPropertyDrawerLookup = new Dictionary<Type, bool>();
         }
 
         public static string SearchField(string search,bool focus = false, params GUILayoutOption[] options)
@@ -131,19 +129,6 @@ namespace DevionGames{
         {
             bool result = false;
             if (GUILayout.Button(content, Styles.leftTextButton, options))
-            {
-                result = true;
-            }
-            Rect rect = GUILayoutUtility.GetLastRect();
-            rect.x += rect.width - 20f;
-            GUI.Label(rect, Styles.rightArrow);
-            return result;
-        }
-
-        public static bool RightArrowToolbarButton(GUIContent content, params GUILayoutOption[] options)
-        {
-            bool result = false;
-            if (GUILayout.Button(content, Styles.leftTextToolbarButton, options))
             {
                 result = true;
             }
@@ -301,90 +286,91 @@ namespace DevionGames{
 
             int controlID = EditorGUIUtility.GetControlID(FocusType.Passive);
 
-             Rect position = GUILayoutUtility.GetRect(GUIContent.none, Styles.inspectorTitle, GUILayout.ExpandWidth(true));
-             if (Event.current.type == EventType.Repaint)
-             {
-                 Color color = GUI.color;
-                 GUI.color = position.Contains(Event.current.mousePosition) ? color * 1.3f : color * 1.1f;
-                 Styles.inspectorBigTitle.Draw(new Rect(position.x, position.y, position.width + 4f, position.height), GUIContent.none, controlID, false);
-                 GUI.color = color;
-             }
+            Rect position = GUILayoutUtility.GetRect(GUIContent.none, Styles.inspectorTitle, GUILayout.ExpandWidth(true));
 
-             Rect rect = new Rect(position.x + (float)Styles.inspectorTitle.padding.left, position.y + (float)Styles.inspectorTitle.padding.top, 16f, 16f);
-             Rect rect1 = new Rect(position.xMax - (float)Styles.inspectorTitle.padding.right - 2f - 16f, rect.y, 16f, 16f);
-             Rect rect4 = rect1;
-             rect4.x = rect4.x - 18f;
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color color = GUI.color;
+                GUI.color = position.Contains(Event.current.mousePosition) ? color * 1.3f : color * 1.1f;
+                Styles.inspectorBigTitle.Draw(new Rect(position.x, position.y, position.width + 4f, position.height), GUIContent.none, controlID, false);
+                GUI.color = color;
+            }
 
-             Rect rect2 = new Rect(position.x + 2f + 2f + 16f * 3, rect.y, 100f, rect.height)
-             {
-                 xMax = rect4.xMin - 2f
-             };
+            Rect rect = new Rect(position.x + (float)Styles.inspectorTitle.padding.left, position.y + (float)Styles.inspectorTitle.padding.top, 16f, 16f);
+            Rect rect1 = new Rect(position.xMax - (float)Styles.inspectorTitle.padding.right - 2f - 16f, rect.y, 16f, 16f);
+            Rect rect4 = rect1;
+            rect4.x = rect4.x - 18f;
 
-             Rect rect3 = new Rect(position.x + 16f, rect.y, 20f, 20f);
-             Texture2D icon = EditorGUIUtility.FindTexture("cs Script Icon");
-             if (target != null)
-             {
-                 IconAttribute iconAttribute = target.GetType().GetCustomAttribute<IconAttribute>();
-                 if (iconAttribute != null)
-                 {
-                     if (iconAttribute.type != null)
-                     {
-                         icon = AssetPreview.GetMiniTypeThumbnail(iconAttribute.type);
-                     }
-                     else
-                     {
-                         icon = Resources.Load<Texture2D>(iconAttribute.path);
-                     }
-                 }
-             }
-             GUI.Label(new Rect(position.x + 13f, rect.y, 18f, 18f), icon);
-             Rect rect5 = rect3;
-             rect5.x = rect5.x + 16f;
-             if (target != null)
-             {
-                 if (typeof(MonoBehaviour).IsAssignableFrom(target.GetType()))
-                 {
-                     MonoBehaviour behaviour = target as MonoBehaviour;
-                     behaviour.enabled = GUI.Toggle(rect5, behaviour.enabled, GUIContent.none);
-                 }
-                 else
-                 {
-                     FieldInfo enableField = target.GetType().GetSerializedField("m_Enabled");
+            Rect rect2 = new Rect(position.x + 2f + 2f + 16f * 3, rect.y, 100f, rect.height)
+            {
+                xMax = rect4.xMin - 2f
+            };
 
-                     if (enableField != null)
-                     {
-                         bool isEnabled = GUI.Toggle(rect5, (bool)enableField.GetValue(target), GUIContent.none);
-                         enableField.SetValue(target, isEnabled);
-                     }
-                 }
-             }
-             if (menu != null && GUI.Button(rect1, EditorGUIUtility.FindTexture("d__Menu"), Styles.inspectorTitleText))
-             {
-                 menu.ShowAsContext();
-             }
+            Rect rect3 = new Rect(position.x + 16f, rect.y, 20f, 20f);
+            Texture2D icon = EditorGUIUtility.FindTexture("cs Script Icon");
+            if (target != null)
+            {
+                IconAttribute iconAttribute = target.GetType().GetCustomAttribute<IconAttribute>();
+                if (iconAttribute != null)
+                {
+                    if (iconAttribute.type != null)
+                    {
+                        icon = AssetPreview.GetMiniTypeThumbnail(iconAttribute.type);
+                    }
+                    else
+                    {
+                        icon = Resources.Load<Texture2D>(iconAttribute.path);
+                    }
+                }
+            }
+            GUI.Label(new Rect(position.x + 13f, rect.y, 18f, 18f), icon);
+            Rect rect5 = rect3;
+            rect5.x = rect5.x + 16f;
+            if (target != null)
+            {
+                if (typeof(MonoBehaviour).IsAssignableFrom(target.GetType()))
+                {
+                    MonoBehaviour behaviour = target as MonoBehaviour;
+                    behaviour.enabled = GUI.Toggle(rect5, behaviour.enabled, GUIContent.none);
+                }
+                else
+                {
+                    FieldInfo enableField = target.GetType().GetSerializedField("m_Enabled");
 
-             EventType eventType = Event.current.type;
-             if (menu != null && eventType == EventType.MouseDown && Event.current.button == 1 && position.Contains(Event.current.mousePosition))
-             {
-                 menu.ShowAsContext();
-             }
+                    if (enableField != null)
+                    {
+                        bool isEnabled = GUI.Toggle(rect5, (bool)enableField.GetValue(target), GUIContent.none);
+                        enableField.SetValue(target, isEnabled);
+                    }
+                }
+            }
+            if (menu != null && GUI.Button(rect1, EditorGUIUtility.FindTexture("d__Menu"), Styles.inspectorTitleText))
+            {
+                menu.ShowAsContext();
+            }
 
-             bool isFolded = EditorPrefs.GetBool("TitlebarFold" + (target != null?target.GetHashCode().ToString():""), true);
-             if (eventType != EventType.MouseDown)
-             {
-                 if (eventType == EventType.Repaint)
-                 {
-                     Styles.inspectorTitle.Draw(position, GUIContent.none, controlID, isFolded);
-                     Styles.inspectorTitleText.Draw(rect2, content, controlID, isFolded);
-                 }
-             }
+            EventType eventType = Event.current.type;
+            if (menu != null && eventType == EventType.MouseDown && Event.current.button == 1 && position.Contains(Event.current.mousePosition))
+            {
+                menu.ShowAsContext();
+            }
 
-             bool flag = DoToggleForward(position, controlID, isFolded, GUIContent.none, GUIStyle.none);
-             if (flag != isFolded)
-             {
-                 EditorPrefs.SetBool("TitlebarFold" +(target != null ? target.GetHashCode().ToString() : ""), flag);
-             }
-             return flag;
+            bool isFolded = EditorPrefs.GetBool("TitlebarFold" + (target != null?target.GetHashCode().ToString():""), true);
+            if (eventType != EventType.MouseDown)
+            {
+                if (eventType == EventType.Repaint)
+                {
+                    Styles.inspectorTitle.Draw(position, GUIContent.none, controlID, isFolded);
+                    Styles.inspectorTitleText.Draw(rect2, content, controlID, isFolded);
+                }
+            }
+
+            bool flag = DoToggleForward(position, controlID, isFolded, GUIContent.none, GUIStyle.none);
+            if (flag != isFolded)
+            {
+                EditorPrefs.SetBool("TitlebarFold" +(target != null ? target.GetHashCode().ToString() : ""), flag);
+            }
+            return flag;
         }
 
         private static bool DoToggleForward(Rect position, int id, bool value, GUIContent content, GUIStyle style)
@@ -925,27 +911,19 @@ namespace DevionGames{
 
         public static bool HasCustomPropertyDrawer(Type type)
         {
-            if (EditorTools.m_CustomPropertyDrawerLookup.ContainsKey(type)) {
-                return EditorTools.m_CustomPropertyDrawerLookup[type];
-            }
-
             foreach (Type typesDerivedFrom in TypeCache.GetTypesDerivedFrom<GUIDrawer>())
             {
                 object[] customAttributes = typesDerivedFrom.GetCustomAttributes<CustomPropertyDrawer>();
                 for (int i = 0; i < (int)customAttributes.Length; i++)
                 {
                     CustomPropertyDrawer customPropertyDrawer = (CustomPropertyDrawer)customAttributes[i];
-
                     FieldInfo field = customPropertyDrawer.GetType().GetField("m_Type", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                     Type type1 = (Type)field.GetValue(customPropertyDrawer);
                     if (type == type1)
-                    {
-                        EditorTools.m_CustomPropertyDrawerLookup.Add(type, true);
                         return true;
-                    }
                 }
             }
-            EditorTools.m_CustomPropertyDrawerLookup.Add(type, false);
+
             return false;
         }
 
@@ -1632,7 +1610,6 @@ namespace DevionGames{
             public static GUIStyle seperator;
             public static Texture2D rightArrow;
             public static GUIStyle leftTextButton;
-            public static GUIStyle leftTextToolbarButton;
             public static GUIStyle inspectorTitle;
             public static GUIStyle inspectorTitleText;
             public static GUIStyle inspectorBigTitle;
@@ -1644,10 +1621,6 @@ namespace DevionGames{
                 };
                 Styles.rightArrow = ((GUIStyle)"AC RightArrow").normal.background;
                 Styles.leftTextButton = new GUIStyle("Button"){
-                    alignment = TextAnchor.MiddleLeft
-                };
-                Styles.leftTextToolbarButton = new GUIStyle(EditorStyles.toolbarButton)
-                {
                     alignment = TextAnchor.MiddleLeft
                 };
                 Styles.inspectorTitle = new GUIStyle("IN Foldout")

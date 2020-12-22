@@ -30,15 +30,13 @@ namespace DevionGames.UIWidgets
         /// </summary>
         public Button button;
 
-        protected List<Button> buttonCache = new List<Button>();
-        protected GameObject m_IconParent;
+        private List<Button> buttonCache = new List<Button>();
+        private GameObject m_IconParent;
 
         protected override void OnStart()
         {
             base.OnStart();
-            if(icon != null)
-                m_IconParent = icon.GetComponentInParent<LayoutElement>().gameObject;
-
+            m_IconParent = icon.GetComponentInParent<LayoutElement>().gameObject;
         }
 
         public virtual void Show(NotificationOptions settings, UnityAction<int> result, params string[] buttons)

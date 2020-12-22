@@ -7,15 +7,15 @@ using System.Collections;
 namespace DevionGames.UIWidgets{
 	public class Joystick : Selectable, IDragHandler {
 		[SerializeField]
-		protected RectTransform handle=null;
+		private RectTransform handle=null;
 		[SerializeField]
-		protected float radius = 90f;
+		private float radius = 90f;
 		[SerializeField]
-		protected float returnSpeed=4f;
+		private float returnSpeed=4f;
 		[SerializeField]
-		protected string horizontalAxis="Horizontal";
+		private string horizontalAxis="Horizontal";
 		[SerializeField]
-		protected string verticalAxis="Vertical";
+		private string verticalAxis="Vertical";
 
 		public JoystickEvent onChange;
 
@@ -34,8 +34,8 @@ namespace DevionGames.UIWidgets{
 			}
 		}
 
-		protected RectTransform parentTransform;
-		protected bool returnHandle;
+		private RectTransform parentTransform;
+		private bool returnHandle;
 		
 		protected override void Start(){
 			base.Start ();

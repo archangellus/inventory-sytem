@@ -34,12 +34,5 @@ namespace DevionGames
             Execute("OnDeselect", new CallbackEventData());
             current = null;
         }
-
-        private void OnDestroy()
-        {
-            if (current == this)
-                OnDeselect();
-        }
-
     }
 }

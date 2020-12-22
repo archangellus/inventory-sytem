@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Linq;
 using System;
-using UnityEngine.Audio;
 
 namespace DevionGames
 {
@@ -54,17 +53,8 @@ namespace DevionGames
 		private PhysicMaterial m_StepFriction;
 		[SerializeField]
 		private PhysicMaterial m_AirFriction;
-
-
-		[HeaderLine("Footsteps")]
-		[SerializeField]
-		private AudioMixerGroup m_AudioMixerGroup=null;
-		[SerializeField]
-		private List<AudioClip> m_FootstepClips=new List<AudioClip>();
-
-		[HeaderLine("Animator")]
-		[SerializeField]
-		private bool m_UseChildAnimator = false;
+ 
+		[HeaderLine ("Animator")]
 		[SerializeField]
 		private float m_ForwardDampTime = 0.15f;
 		[SerializeField]
@@ -422,7 +412,7 @@ namespace DevionGames
 			this.m_Transform = transform;
 			this.m_Animator = GetComponent<Animator>();
 			Animator childAnimator = gameObject.GetComponentsInChildren<Animator>().Where(x => x != this.m_Animator).FirstOrDefault();
-			if (childAnimator != null && this.m_UseChildAnimator)
+			if (childAnimator != null)
 			{
 				this.m_Animator.runtimeAnimatorController = childAnimator.runtimeAnimatorController;
 				this.m_Animator.avatar = childAnimator.avatar;
@@ -823,8 +813,8 @@ namespace DevionGames
                 this.m_Animator.SetFloat("Forward Input", 0f);
                 this.m_Animator.SetFloat("Horizontal Input", 0f);
                 this.m_Rigidbody.velocity = Vector3.zero;
+
             }
-			enabled = active;
 		}
 
         public void SetMotionEnabled(object[] data) {
@@ -856,14 +846,14 @@ namespace DevionGames
         }
 
 
-		private void Footsteps(AnimationEvent evt) {
+		private void PlayFootstepSound(AnimationEvent evt) {
+			if (RelativeInput.sqrMagnitude > 0.5f && evt.animatorClipInfo.weight > 0.5f && m_Rigidbody.velocity.sqrMagnitude > 0.5f)
+				PlaySound(evt.objectReferenceParameter as AudioClip, evt.floatParameter*0.5f);
+		}
 
-			if (this.m_IsGrounded && m_Rigidbody.velocity.sqrMagnitude > 0.5f && this.m_FootstepClips.Count > 0)
-			{
-				float volume = evt.animatorClipInfo.weight;
-				AudioClip clip = this.m_FootstepClips[UnityEngine.Random.Range(0,this.m_FootstepClips.Count)];
-				PlaySound(clip, volume);
-			}
+		private void PlaySound(AnimationEvent evt)
+		{
+			PlaySound(evt.objectReferenceParameter as AudioClip, evt.floatParameter);
 		}
 
 		private void PlaySound(AudioClip clip, float volume)
@@ -872,9 +862,12 @@ namespace DevionGames
 
 			if (this.m_AudioSource == null)
 			{
-				this.m_AudioSource = gameObject.AddComponent<AudioSource>();
-				this.m_AudioSource.outputAudioMixerGroup = this.m_AudioMixerGroup;
-				this.m_AudioSource.spatialBlend = 1f;
+
+				this.m_AudioSource = GetComponent<AudioSource>();
+				if (this.m_AudioSource == null)
+				{
+					this.m_AudioSource = gameObject.AddComponent<AudioSource>();
+				}
 
 			}
 			if (this.m_AudioSource != null)

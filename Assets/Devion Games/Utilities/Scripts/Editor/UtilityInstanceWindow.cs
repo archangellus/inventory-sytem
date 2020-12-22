@@ -31,27 +31,14 @@ namespace DevionGames{
 
 		private void OnEnable(){
 			instance = this;
-			AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
 		}
-
-
-        private void OnDisable()
-        {
-			AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
-		}
-
-        public static void CloseWindow(){
+		
+		public static void CloseWindow(){
 			if (UtilityInstanceWindow.instance != null) {
 				UtilityInstanceWindow.instance.Close();
 			}
 		}
-
-
-		private void OnAfterAssemblyReload()
-		{
-			Close();
-		}
-
+		
 		private void OnDestroy(){
 			if (onClose != null) {
 				onClose.Invoke();
@@ -64,7 +51,7 @@ namespace DevionGames{
 				onGUI.Invoke ();
 			}
 			EditorGUILayout.EndScrollView ();
-            //Focus();
+            Focus();
 		}
 	}
 }

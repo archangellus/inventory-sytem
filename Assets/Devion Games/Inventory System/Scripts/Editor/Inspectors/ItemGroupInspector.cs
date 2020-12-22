@@ -20,7 +20,6 @@ namespace DevionGames.InventorySystem
 
         private void OnEnable()
         {
-            if (target == null) return;
             this.m_Script = serializedObject.FindProperty("m_Script");
             this.m_GroupName = serializedObject.FindProperty("m_GroupName");
 
@@ -28,10 +27,10 @@ namespace DevionGames.InventorySystem
             this.m_Modifiers = serializedObject.FindProperty("m_Modifiers");
 
 
-          /*  if (this.m_Items.arraySize > 0)
+            if (this.m_Items.arraySize > 0)
             {
                 CheckForDatabase(this.m_Items.GetArrayElementAtIndex(0).objectReferenceValue);
-            }*/
+            }
 
             CreateItemList(serializedObject, this.m_Items);
         }
@@ -142,7 +141,7 @@ namespace DevionGames.InventorySystem
 
         }
 
-       /* private void CheckForDatabase(Object current)
+        private void CheckForDatabase(Object current)
         {
             if (InventorySystemEditor.Database == null && current != null)
             {
@@ -202,6 +201,6 @@ namespace DevionGames.InventorySystem
                     }
                 }
             }
-        }*/
+        }
     }
 }

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using DevionGames.Graphs;
 using UnityEngine.UI;
-using UnityEngine.Audio;
 
 namespace DevionGames.StatSystem
 {
@@ -23,8 +22,6 @@ namespace DevionGames.StatSystem
         [SerializeField]
         private GameObject m_DamageText=null;
 
-        private AudioSource m_AudioSource;
-
         private void Awake()
         {
             for (int i = 0; i < stats.Count; i++)
@@ -41,7 +38,6 @@ namespace DevionGames.StatSystem
             }
             UpdateStats();
             Refresh();
-            EventHandler.Register<GameObject, Object>(gameObject, "SendDamage", SendDamage);
         }
 
         public void UpdateStats()
@@ -55,18 +51,17 @@ namespace DevionGames.StatSystem
 
         protected void TriggerAnimationEvent(AnimationEvent ev)
         {
-            if(ev.animatorClipInfo.weight > 0.5f)
             SendMessage(ev.stringParameter,ev.objectReferenceParameter, SendMessageOptions.DontRequireReceiver);
         }
 
-        //Received by animation
+        //This is for testing
         private void SendDamage(Object data)
         {
             DamageData damageData = data as DamageData;
-            if (damageData == null) return;
+            Stat sendingStat = stats.FirstOrDefault(x => x.Name == damageData.sendingStat);
+            if (sendingStat == null) return;
 
             Collider[] colliders = Physics.OverlapSphere(transform.position, damageData.maxDistance);
-
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].transform != transform)
@@ -75,58 +70,39 @@ namespace DevionGames.StatSystem
                     float angle = Vector3.Angle(direction, transform.forward);
                     if (Mathf.Abs(angle) < damageData.maxAngle)
                     {
-                        SendDamage(colliders[i].gameObject, damageData);
+                        StatsHandler receiver = colliders[i].GetComponent<StatsHandler>();
+                        if(receiver != null)
+                        {
+                            Stat criticalStrikeStat = stats.FirstOrDefault(x => x.Name == damageData.criticalStrikeStat);
+
+                            bool criticaleStrike = criticalStrikeStat!= null && criticalStrikeStat.Value > UnityEngine.Random.Range(0f, 100f);
+                            float damage = sendingStat.Value;
+                            if (criticaleStrike)
+                                damage *= 2f;
+
+                            receiver.ApplyDamageInternal(damageData.receivingStat, damage, 0, criticaleStrike);
+                            if (damageData.particleEffect != null)
+                            {
+                                Vector3 pos = colliders[i].ClosestPoint(transform.position + damageData.offset);
+                                Vector3 right = UnityEngine.Random.Range(-damageData.randomize.x, damageData.randomize.x)*transform.right;
+                                Vector3 up = UnityEngine.Random.Range(-damageData.randomize.y, damageData.randomize.y) * transform.up ;
+                                Vector3 forward = UnityEngine.Random.Range(-damageData.randomize.z, damageData.randomize.z)*transform.forward;
+
+                                Vector3 relativePos = (transform.position + damageData.offset + right + up + forward) - pos;
+                                GameObject effect = Instantiate(damageData.particleEffect, pos, Quaternion.LookRotation(relativePos, Vector3.up));
+                                Destroy(effect, damageData.lifeTime);
+                            }
+
+                            CameraEffects.Shake(damageData.duration, damageData.speed, damageData.amount);
+                            if(damageData.hitSounds.Length > 0)
+                                UnityTools.PlaySound(damageData.hitSounds[UnityEngine.Random.Range(0,damageData.hitSounds.Length)],damageData.volume);
+                        }
+                       
                     }
                 }
             }
         }
 
-        private void SendDamage(GameObject receiver, Object data) {
-            StatsHandler receiverHandler = receiver.GetComponent<StatsHandler>();
-            DamageData damageData = data as DamageData;
-
-            if (receiverHandler != null && receiverHandler.enabled && damageData != null)
-            {
-                Stat sendingStat = stats.FirstOrDefault(x => x.Name == damageData.sendingStat);
-                if (sendingStat == null) return;
-
-                Stat criticalStrikeStat = stats.FirstOrDefault(x => x.Name == damageData.criticalStrikeStat);
-
-                bool criticaleStrike = criticalStrikeStat != null && criticalStrikeStat.Value > UnityEngine.Random.Range(0f, 100f);
-                float damage = sendingStat.Value;
-                if (criticaleStrike)
-                    damage *= 2f;
-
-                receiverHandler.ApplyDamageInternal(damageData.receivingStat, damage, 0, criticaleStrike);
-
-                if (damageData.particleEffect != null)
-                {
-                    Vector3 pos = receiver.GetComponent<Collider>().ClosestPoint(transform.position + damageData.offset);
-                    Vector3 right = UnityEngine.Random.Range(-damageData.randomize.x, damageData.randomize.x) * transform.right;
-                    Vector3 up = UnityEngine.Random.Range(-damageData.randomize.y, damageData.randomize.y) * transform.up;
-                    Vector3 forward = UnityEngine.Random.Range(-damageData.randomize.z, damageData.randomize.z) * transform.forward;
-
-                    Vector3 relativePos = (transform.position + damageData.offset + right + up + forward) - pos;
-                    GameObject effect = Instantiate(damageData.particleEffect, pos, Quaternion.LookRotation(relativePos, Vector3.up));
-                    Destroy(effect, damageData.lifeTime);
-                }
-
-                CameraEffects.Shake(damageData.duration, damageData.speed, damageData.amount);
-                if (damageData.hitSounds.Length > 0)
-                    PlaySound(damageData.hitSounds[UnityEngine.Random.Range(0, damageData.hitSounds.Length)], damageData.audioMixerGroup, damageData.volumeScale);
-
-               
-            }
-        }
-           
-        private void PlaySound(AudioClip clip,AudioMixerGroup audioMixerGroup,  float volumeSclae) {
-            if (this.m_AudioSource == null) {
-                this.m_AudioSource = gameObject.AddComponent<AudioSource>();
-            }
-            this.m_AudioSource.outputAudioMixerGroup = audioMixerGroup;
-            this.m_AudioSource.PlayOneShot(clip, volumeSclae);
-
-        }
 
 
         /// <summary>

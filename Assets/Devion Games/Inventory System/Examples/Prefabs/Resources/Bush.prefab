@@ -139,29 +139,15 @@ MonoBehaviour:
   - id: 6
   - id: 7
   - id: 8
-  - id: 9
-  - id: 10
   references:
     version: 1
     00000000:
-      type: {class: HasItem, ns: DevionGames.InventorySystem, asm: DevionGames.InventorySystem}
-      data:
-        m_Type: DevionGames.InventorySystem.HasItem
-        m_Enabled: 1
-        requiredItems:
-        - item: {fileID: -904524929377059290, guid: e1f045c49e197e3439b99da9edbc5ba3,
-            type: 2}
-          category: {fileID: 0}
-          boolValue: 0
-          stringValue: Skills
-          intValue: 0
-    00000001:
       type: {class: CanPickup, ns: DevionGames.InventorySystem, asm: DevionGames.InventorySystem}
       data:
         m_Type: DevionGames.InventorySystem.CanPickup
         m_Enabled: 1
         m_WindowName: Inventory
-    00000002:
+    00000001:
       type: {class: SetEnabled, ns: DevionGames, asm: DevionGames.Triggers}
       data:
         m_Type: DevionGames.SetEnabled
@@ -169,7 +155,7 @@ MonoBehaviour:
         m_Target: 1
         m_ComponentName: ThirdPersonController
         m_Enable: 0
-    00000003:
+    00000002:
       type: {class: SendMessage, ns: DevionGames, asm: DevionGames.Triggers}
       data:
         m_Type: DevionGames.SendMessage
@@ -187,13 +173,13 @@ MonoBehaviour:
           m_ObjectValue: {fileID: 0}
           m_ArgumentType: 1
         m_Options: 1
-    00000004:
+    00000003:
       type: {class: LookAtTrigger, ns: DevionGames, asm: DevionGames.Triggers}
       data:
         m_Type: DevionGames.LookAtTrigger
         m_Enabled: 1
         m_Speed: 15
-    00000005:
+    00000004:
       type: {class: CrossFade, ns: DevionGames, asm: DevionGames.Triggers}
       data:
         m_Type: DevionGames.CrossFade
@@ -201,22 +187,14 @@ MonoBehaviour:
         m_Target: 1
         m_AnimatorState: Pickup Plant
         m_TransitionDuration: 0.2
-    00000006:
+    00000005:
       type: {class: ShowProgressbar, ns: DevionGames.InventorySystem, asm: DevionGames.InventorySystem}
       data:
         m_Type: DevionGames.InventorySystem.ShowProgressbar
         m_Enabled: 1
         m_WidgetName: General Progressbar
         m_Duration: 6
-    00000007:
-      type: {class: CheckSkill, ns: DevionGames.InventorySystem, asm: DevionGames.InventorySystem}
-      data:
-        m_Type: DevionGames.InventorySystem.CheckSkill
-        m_Enabled: 1
-        m_WindowName: Skills
-        m_Skill: {fileID: -904524929377059290, guid: e1f045c49e197e3439b99da9edbc5ba3,
-          type: 2}
-    00000008:
+    00000006:
       type: {class: Pickup, ns: DevionGames.InventorySystem, asm: DevionGames.InventorySystem}
       data:
         m_Type: DevionGames.InventorySystem.Pickup
@@ -224,7 +202,7 @@ MonoBehaviour:
         m_WindowName: Inventory
         m_DestroyWhenEmpty: 1
         m_Amount: 1
-    00000009:
+    00000007:
       type: {class: SendMessage, ns: DevionGames, asm: DevionGames.Triggers}
       data:
         m_Type: DevionGames.SendMessage
@@ -242,7 +220,7 @@ MonoBehaviour:
           m_ObjectValue: {fileID: 0}
           m_ArgumentType: 1
         m_Options: 1
-    0000000A:
+    00000008:
       type: {class: SetEnabled, ns: DevionGames, asm: DevionGames.Triggers}
       data:
         m_Type: DevionGames.SetEnabled

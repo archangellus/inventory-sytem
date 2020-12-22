@@ -30,7 +30,7 @@ namespace DevionGames
         /// </summary>
         /// <param name="clip">Clip.</param>
         /// <param name="volume">Volume.</param>
-        public static void PlaySound(AudioClip clip, float volumeScale)
+        public static void PlaySound(AudioClip clip, float volume)
         {
             if (clip == null)
             {
@@ -50,7 +50,7 @@ namespace DevionGames
             }
             if (audioSource != null)
             {
-                audioSource.PlayOneShot(clip, volumeScale);
+                audioSource.PlayOneShot(clip, volume);
             }
         }
 

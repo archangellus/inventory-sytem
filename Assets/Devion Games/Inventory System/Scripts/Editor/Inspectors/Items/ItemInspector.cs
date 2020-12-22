@@ -64,7 +64,6 @@ namespace DevionGames.InventorySystem
         private Dictionary<Type, string[]> m_ClassProperties;
         protected string[] m_PropertiesToExcludeForChildClasses;
         protected List<System.Action> m_DrawInspectors;
-        protected string m_NameError;
 
         protected virtual void OnEnable ()
 		{
@@ -295,8 +294,14 @@ namespace DevionGames.InventorySystem
         }
 
         protected void DrawBaseInspector() {
-            EditorGUILayout.PropertyField(this.m_ItemName, new GUIContent("Name"));
+            if (string.IsNullOrEmpty(this.m_ItemName.stringValue)) {
+                EditorGUILayout.HelpBox("Name field can't be empty. Please enter a unique name.", MessageType.Error);
+            } else if (InventorySystemEditor.instance != null && InventorySystemEditor.Database.items.Any(x => !x.Equals(target) && x.Name == (target as Item).Name)) {
+                EditorGUILayout.HelpBox("Duplicate name. Item names need to be unique.", MessageType.Error);
+            }
 
+
+            EditorGUILayout.PropertyField(this.m_ItemName, new GUIContent("Name"));
             EditorGUILayout.PropertyField(this.m_UseItemNameAsDisplayName, new GUIContent("Use name as display name"));
             this.m_ShowItemDisplayNameOptions.target = !this.m_UseItemNameAsDisplayName.boolValue;
             if (EditorGUILayout.BeginFadeGroup(this.m_ShowItemDisplayNameOptions.faded))
@@ -442,7 +447,7 @@ namespace DevionGames.InventorySystem
             };
         }
 
-        /*private List<int> selectedRarity;
+        private List<int> selectedRarity;
 
         void OnRaritySelected(object index)
         {
@@ -504,7 +509,7 @@ namespace DevionGames.InventorySystem
                 selected.Add(InventorySystemEditor.Database.raritys[selectedRarity[i]]);
             }
             return selected.ToArray();
-        }*/
+        }
 
         /*protected void DrawClassPropertiesExcluding(params string[] propertyToExclude)
         {

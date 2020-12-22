@@ -10,22 +10,16 @@ namespace DevionGames.InventorySystem.Configuration
     public class DefaultInspector : Editor
     {
         private SerializedProperty m_ShowAllComponents;
-        private SerializedProperty m_Script;
 
         private void OnEnable()
         {
-            this.m_Script = serializedObject.FindProperty("m_Script");
             this.m_ShowAllComponents = serializedObject.FindProperty("showAllComponents");
         }
 
         public override void OnInspectorGUI()
         {
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.m_Script);
-            EditorGUI.EndDisabledGroup();
-
             serializedObject.Update();
-            DrawPropertiesExcluding(serializedObject, this.m_ShowAllComponents.propertyPath, this.m_Script.propertyPath);
+            DrawPropertiesExcluding(serializedObject, this.m_ShowAllComponents.propertyPath);
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(this.m_ShowAllComponents);
             if (EditorGUI.EndChangeCheck()) {

@@ -536,17 +536,19 @@ ModelImporter:
       curves: []
       events:
       - time: 0.38574657
-        functionName: Footsteps
+        functionName: PlayFootstepSound
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        objectReferenceParameter: {fileID: 8300000, guid: 5a9383dda6cabc047b7a297602e93eb4,
+          type: 3}
+        floatParameter: 0.4
         intParameter: 0
         messageOptions: 0
       - time: 0.9267328
-        functionName: Footsteps
+        functionName: PlayFootstepSound
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        objectReferenceParameter: {fileID: 8300000, guid: e9714160ce34f2b4ab63ff8c27bd68e1,
+          type: 3}
+        floatParameter: 0.4
         intParameter: 0
         messageOptions: 0
       transformMask: []
@@ -579,17 +581,19 @@ ModelImporter:
       curves: []
       events:
       - time: 0.3621401
-        functionName: Footsteps
+        functionName: PlayFootstepSound
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        objectReferenceParameter: {fileID: 8300000, guid: 5a9383dda6cabc047b7a297602e93eb4,
+          type: 3}
+        floatParameter: 0.3
         intParameter: 0
         messageOptions: 0
       - time: 0.8600822
-        functionName: Footsteps
+        functionName: PlayFootstepSound
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        objectReferenceParameter: {fileID: 8300000, guid: e9714160ce34f2b4ab63ff8c27bd68e1,
+          type: 3}
+        floatParameter: 0.3
         intParameter: 0
         messageOptions: 0
       transformMask:
@@ -776,17 +780,19 @@ ModelImporter:
       curves: []
       events:
       - time: 0.33333316
-        functionName: Footsteps
+        functionName: PlayFootstepSound
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        objectReferenceParameter: {fileID: 8300000, guid: 5a9383dda6cabc047b7a297602e93eb4,
+          type: 3}
+        floatParameter: 0.3
         intParameter: 0
         messageOptions: 0
       - time: 0.872428
-        functionName: Footsteps
+        functionName: PlayFootstepSound
         data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
+        objectReferenceParameter: {fileID: 8300000, guid: e9714160ce34f2b4ab63ff8c27bd68e1,
+          type: 3}
+        floatParameter: 0.3
         intParameter: 0
         messageOptions: 0
       transformMask:

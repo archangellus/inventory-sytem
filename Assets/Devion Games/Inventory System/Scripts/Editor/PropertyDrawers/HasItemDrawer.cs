@@ -32,10 +32,10 @@ namespace DevionGames.InventorySystem
                     rect.x += rect.width + 5;
                     rect.width -= 5f;
                     SerializedProperty window = element.FindPropertyRelative("stringValue");
-                    /*if (InventorySystemEditor.Database == null || InventorySystemEditor.Database.items.Count == 0)
+                    if (InventorySystemEditor.Database == null || InventorySystemEditor.Database.items.Count == 0)
                     {
                         rect.y += (9 + EditorGUIUtility.singleLineHeight + 6);
-                    }*/
+                    }
                     EditorGUI.PropertyField(rect, window, GUIContent.none);
                 };
                 m_RequiredItemList.drawHeaderCallback = (Rect rect) =>
@@ -44,13 +44,12 @@ namespace DevionGames.InventorySystem
                 };
                 this.m_ListMap.Add(property.propertyPath, m_RequiredItemList);
             }
-          //  m_RequiredItemList.elementHeight = (InventorySystemEditor.Database != null && InventorySystemEditor.Database.items.Count > 0 || m_RequiredItemList.count == 0 ? 21 : (30 + EditorGUIUtility.singleLineHeight + 4));
+            m_RequiredItemList.elementHeight = (InventorySystemEditor.Database != null && InventorySystemEditor.Database.items.Count > 0 || m_RequiredItemList.count == 0 ? 21 : (30 + EditorGUIUtility.singleLineHeight + 4));
             try
             {
                 m_RequiredItemList.DoLayoutList();
             }catch  {
-                if (Event.current.type == EventType.Repaint)
-                    this.m_ListMap.Remove(property.propertyPath);
+                this.m_ListMap.Remove(property.propertyPath);
             }
             EditorGUILayout.Space();
 

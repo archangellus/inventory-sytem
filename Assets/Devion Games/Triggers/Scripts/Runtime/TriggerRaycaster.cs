@@ -41,14 +41,12 @@ namespace DevionGames
             RaycastHit hit;
             if (TriggerRaycaster.Raycast(ray, out hit, float.PositiveInfinity, this.m_LayerMask))
             {
-                GameObject current = hit.collider.GetComponentInParent<BaseTrigger>().gameObject;
-
-                if (m_LastCameraHit != current)
+                if (m_LastCameraHit != hit.collider.gameObject)
                 {
                     if(this.m_LastCameraHit != null)
                         EventHandler.Execute(this.m_LastCameraHit, "OnPointerExitTrigger");
 
-                    m_LastCameraHit = current;
+                    m_LastCameraHit = hit.collider.gameObject;
                     EventHandler.Execute(m_LastCameraHit, "OnPointerEnterTrigger");
                 }
                 int button = -1;
@@ -61,7 +59,7 @@ namespace DevionGames
 
                 if (button != -1)
                 {
-                    m_LastCameraHit = current;
+                    m_LastCameraHit = hit.collider.gameObject;
                     EventHandler.Execute<int>(m_LastCameraHit, "OnPoinerClickTrigger", button);
                 }
                 
@@ -76,6 +74,49 @@ namespace DevionGames
                 }
                 TriggerRaycaster.m_PointerOverTrigger = false;
             }
+
+
+
+
+            /*if (!UnityTools.IsPointerOverUI())
+            {
+
+            /*  RaycastHit hit;
+              if (Physics.Raycast(this.m_Transform.position, this.m_Transform.forward, out hit, float.PositiveInfinity, this.m_LayerMask, QueryTriggerInteraction.Ignore))
+              {
+                  if (m_LastCameraHit != null && m_LastCameraHit != hit.collider.gameObject)
+                  {
+                      EventHandler.Execute<bool>(this.m_LastCameraHit, "OnCameraRaycast", false);
+                  }
+                  m_LastCameraHit = hit.collider.gameObject;
+                  EventHandler.Execute<bool>(m_LastCameraHit, "OnCameraRaycast", true);
+              }
+              else
+              {
+                  if (m_LastCameraHit != null)
+                  {
+                      EventHandler.Execute<bool>(m_LastCameraHit, "OnCameraRaycast", false);
+                      m_LastCameraHit = null;
+                  }
+              }
+
+              if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, float.PositiveInfinity, this.m_LayerMask, QueryTriggerInteraction.Ignore))
+              {
+                  if (m_LastMouseHit != null && m_LastMouseHit != hit.collider.gameObject)
+                  {
+                      EventHandler.Execute<bool>(this.m_LastMouseHit, "OnMouseRaycast", false);
+                  }
+                  m_LastMouseHit = hit.collider.gameObject;
+                  EventHandler.Execute<bool>(m_LastMouseHit, "OnMouseRaycast", true);
+              }
+              else
+              {
+                  if (m_LastMouseHit != null)
+                  {
+                      EventHandler.Execute<bool>(m_LastMouseHit, "OnMouseRaycast", false);
+                      m_LastMouseHit = null;
+                  }
+              }*/
         }
         
 
@@ -92,7 +133,7 @@ namespace DevionGames
                 for (int i = 0; i < hits.Length; i++)
                 {
                     RaycastHit current = hits[i];
-                    if (current.collider.GetComponentInParent<BaseTrigger>() == null)
+                    if (current.collider.GetComponent<BaseTrigger>() == null)
                         continue;
                     hit = current;
                     return true;

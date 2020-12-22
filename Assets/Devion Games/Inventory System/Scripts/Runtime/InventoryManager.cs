@@ -13,12 +13,7 @@ namespace DevionGames.InventorySystem
 {
 	public class InventoryManager : MonoBehaviour
 	{
-        /// <summary>
-		/// Don't destroy this object instance when loading new scenes.
-		/// </summary>
-		public bool dontDestroyOnLoad = true;
-
-        private static InventoryManager m_Current;
+		private static InventoryManager m_Current;
 
 		/// <summary>
 		/// The InventoryManager singleton object. This object is set inside Awake()
@@ -47,9 +42,6 @@ namespace DevionGames.InventorySystem
 				return null;
 			}
 		}
-
-        [SerializeField]
-        private ItemDatabase[] m_ChildDatabases= null;
 
         private static Default m_DefaultSettings;
         public static Default DefaultSettings {
@@ -133,13 +125,15 @@ namespace DevionGames.InventorySystem
             }
         }
 
+		/// <summary>
+		/// Don't destroy this object instance when loading new scenes.
+		/// </summary>
+		public bool dontDestroyOnLoad = true;
+
         [HideInInspector]
         public UnityEvent onDataLoaded;
         [HideInInspector]
         public UnityEvent onDataSaved;
-
-        protected static bool m_IsLoaded = false;
-        public static bool IsLoaded { get => m_IsLoaded; }
 
 
         /// <summary>
@@ -166,13 +160,7 @@ namespace DevionGames.InventorySystem
                     PhysicsRaycaster physicsRaycaster = Camera.main.gameObject.AddComponent<PhysicsRaycaster>();
                     physicsRaycaster.eventMask = Physics.DefaultRaycastLayers;
                 }
-
-                this.m_Database = ScriptableObject.Instantiate(this.m_Database);
-                for (int i = 0; i < this.m_ChildDatabases.Length; i++) {
-                    ItemDatabase child = this.m_ChildDatabases[i];
-                    this.m_Database.Merge(child);
-                }
-
+           
                 m_PrefabCache = new Dictionary<string, GameObject>();
                 UnityEngine.SceneManagement.SceneManager.activeSceneChanged += ChangedActiveScene;
 
@@ -191,8 +179,6 @@ namespace DevionGames.InventorySystem
 
                 Physics.queriesHitTriggers = InventoryManager.DefaultSettings.queriesHitTriggers;
 
-                m_IsLoaded = !HasSavedData();
-                this.onDataLoaded.AddListener(() => { m_IsLoaded = true; });
                 if (InventoryManager.DefaultSettings.debugMessages)
                     Debug.Log("Inventory Manager initialized.");
             }
@@ -200,16 +186,15 @@ namespace DevionGames.InventorySystem
 
         private void Start()
         {
-            /*if (InventoryManager.SavingLoading.autoSave){
+            if (InventoryManager.SavingLoading.autoSave){
                 StartCoroutine(DelayedLoading(1f));
-            }*/
+            }
         }
 
         private static void ChangedActiveScene(UnityEngine.SceneManagement.Scene current, UnityEngine.SceneManagement.Scene next)
         {
             if (InventoryManager.SavingLoading.autoSave)
             {
-                InventoryManager.m_IsLoaded = false;
                 InventoryManager.Load();
             }
         }
@@ -260,23 +245,18 @@ namespace DevionGames.InventorySystem
 
         public static void Save(string key) {
 
-            /* List<MonoBehaviour> results = new List<MonoBehaviour>();
-             UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
-             //DontDestroyOnLoad GameObjects
-             SingleInstance.GetInstanceObjects().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
+            List<MonoBehaviour> results = new List<MonoBehaviour>();
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
+            //DontDestroyOnLoad GameObjects
+            SingleInstance.GetInstanceObjects().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
+            
+            ItemCollection[] serializables  = results.OfType<ItemCollection>().Where(x=>x.saveable).ToArray();
 
-             ItemCollection[] serializables  = results.OfType<ItemCollection>().Where(x=>x.saveable).ToArray();
+            IJsonSerializable[] ui = serializables.Where(x=>x.GetComponent<ItemContainer>() != null).ToArray();
+            IJsonSerializable[] world = serializables.Except(ui).ToArray();
 
-             IJsonSerializable[] ui = serializables.Where(x=>x.GetComponent<ItemContainer>() != null).ToArray();
-             IJsonSerializable[] world = serializables.Except(ui).ToArray();
-
-             string uiData = JsonSerializer.Serialize(ui);
-             string worldData = JsonSerializer.Serialize(world);*/
-
-            string uiData = string.Empty;
-            string worldData = string.Empty;
-            Serialize(ref uiData, ref worldData);
-
+            string uiData = JsonSerializer.Serialize(ui);
+            string worldData = JsonSerializer.Serialize(world);
             string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             
             PlayerPrefs.SetString(key+".UI",uiData);
@@ -305,20 +285,7 @@ namespace DevionGames.InventorySystem
             }
         }
 
-        public static void Serialize(ref string uiData, ref string sceneData) {
-            List<MonoBehaviour> results = new List<MonoBehaviour>();
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects().ToList().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
-            //DontDestroyOnLoad GameObjects
-            SingleInstance.GetInstanceObjects().ForEach(g => results.AddRange(g.GetComponentsInChildren<MonoBehaviour>(true)));
-
-            ItemCollection[] serializables = results.OfType<ItemCollection>().Where(x => x.saveable).ToArray();
-
-            IJsonSerializable[] ui = serializables.Where(x => x.GetComponent<ItemContainer>() != null).ToArray();
-            IJsonSerializable[] world = serializables.Except(ui).ToArray();
-
-            uiData = JsonSerializer.Serialize(ui);
-            sceneData = JsonSerializer.Serialize(world);
-        }
+       
 
         public static void Load() {
             string key = PlayerPrefs.GetString(InventoryManager.SavingLoading.savingKey, InventoryManager.SavingLoading.savingKey);
@@ -330,19 +297,15 @@ namespace DevionGames.InventorySystem
             string uiData = PlayerPrefs.GetString(key + ".UI");
             string sceneData = PlayerPrefs.GetString(key + "." + currentScene);
 
-            Load(uiData, sceneData);
-        }
-
-        public static void Load(string uiData, string sceneData) {
             //Load UI
             LoadUI(uiData);
             //Load Scene
             LoadScene(sceneData);
 
-            if (InventoryManager.current != null && InventoryManager.current.onDataLoaded != null)
-            {
+            if (InventoryManager.current != null && InventoryManager.current.onDataLoaded != null){
                 InventoryManager.current.onDataLoaded.Invoke();
             }
+
         }
 
         public static bool HasSavedData() {

@@ -7,8 +7,10 @@ namespace DevionGames.InventorySystem{
 	[CustomPropertyDrawer(typeof(RarityPickerAttribute))]
 	public class RarityPickerDrawer : PickerDrawer<Rarity> {
 
-		protected override List<Rarity> GetItems(ItemDatabase database) {
-			return database.raritys;
+		protected override List<Rarity> Items {
+			get {
+				return Database.raritys;
+			}
 		}
 	}
 }
