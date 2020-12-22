@@ -18,7 +18,7 @@ namespace DevionGames
 
         private Animator m_Animator;
 
-        public override void OnSequenceStart()
+        public override void OnStart()
         {
             this.m_Animator = this.m_Target == TargetType.Self ? gameObject.GetComponent<Animator>() : playerInfo.animator;
         }

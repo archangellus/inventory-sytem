@@ -318,8 +318,7 @@ namespace DevionGames.InventorySystem
 
         protected override void OnStart()
         {
-            if(InventoryManager.current.PlayerInfo.gameObject != null)
-                this.m_ThirdPersonController = InventoryManager.current.PlayerInfo.gameObject.GetComponent("ThirdPersonController") as MonoBehaviour;
+            this.m_ThirdPersonController = InventoryManager.current.PlayerInfo.gameObject.GetComponent("ThirdPersonController") as MonoBehaviour;
         }
 
         protected override void Update()
