@@ -504,7 +504,6 @@ MonoBehaviour:
         m_Enabled: 1
         m_Target: 1
         m_Position: {x: 0, y: 0, z: 0}
-        m_SetCameraRelative: 0
     00000008:
       type: {class: SetEnabled, ns: DevionGames, asm: DevionGames.Triggers}
       data:
@@ -812,7 +811,6 @@ MonoBehaviour:
         m_Enabled: 1
         m_Target: 1
         m_Position: {x: 20.65, y: 0.018, z: -21.71}
-        m_SetCameraRelative: 1
     00000006:
       type: {class: SetEnabled, ns: DevionGames, asm: DevionGames.Triggers}
       data:
@@ -1121,8 +1119,8 @@ MonoBehaviour:
   - {fileID: -8967533827971111582}
   currencies:
   - {fileID: -2811142919616601772}
-  - {fileID: -6442420119529586086}
   - {fileID: -8859189835947310016}
+  - {fileID: -6442420119529586086}
   raritys:
   - {fileID: 4257271418691296376}
   - {fileID: 1459171670829712994}
@@ -1574,7 +1572,6 @@ MonoBehaviour:
         m_Enabled: 1
         m_Target: 1
         m_Position: {x: -3.45, y: 0.018, z: 10.92}
-        m_SetCameraRelative: 1
     00000006:
       type: {class: SetEnabled, ns: DevionGames, asm: DevionGames.Triggers}
       data:
@@ -2343,7 +2340,6 @@ MonoBehaviour:
         m_Enabled: 1
         m_Target: 1
         m_Position: {x: -3.45, y: 0.018, z: 3.96}
-        m_SetCameraRelative: 1
     00000006:
       type: {class: SetEnabled, ns: DevionGames, asm: DevionGames.Triggers}
       data:
